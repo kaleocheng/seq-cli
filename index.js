@@ -1,12 +1,47 @@
 const puppeteer = require('puppeteer')
 const Mustache = require('mustache')
+const commander = require('commander');
 const path = require('path')
 const fs = require('fs');
+const pkg = require('./package.json')
 
-const main = (async () => {
+
+function exit(info) {
+    console.log(info)
+    process.exit(0)
+}
+
+commander
+    .version(pkg.version)
+    .option('-W, --width [width]', 'Width of the page. Optional.', /^\d+$/, '800')
+    .option('-H, --height [height]', 'Height of the page. Optional.', /^\d+$/, '600')
+    .option('-i, --input <input>', 'Input seq file. Required.')
+    .action(cmd => {
+        if (!cmd.input) {
+            exit('Need a input file')
+        }
+        if (!fs.existsSync(cmd.input)) {
+            exit(`Input file ${cmd.input} doesn't exist`)
+        }
+    })
+    .option('-o, --output [output]', 'Output file. It should be png')
+    .action(cmd => {
+        if (!cmd.output) {
+            cmd.output = path.join(path.parse(cmd.input).dir, `${path.parse(cmd.input).name}.png`)
+        }
+        const outputDir = path.dirname(cmd.output)
+        if (!fs.existsSync(outputDir)) {
+            error(`Output directory "${outputDir}/" doesn't exist`)
+        }
+    })
+    .parse(process.argv);
+
+
+
+(async () => {
     const index = path.join(__dirname, 'index.html')
-    const seq = fs.readFileSync('test.seq', 'utf8')
-    const template = fs.readFileSync('index.mustache', 'utf8')
+    const seq = fs.readFileSync(commander.input, 'utf8')
+    const template = fs.readFileSync(path.join(__dirname, 'index.mustache'), 'utf8')
     let output = Mustache.render(template, {
         seq: seq
     })
@@ -14,16 +49,14 @@ const main = (async () => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     await page.setViewport({
-        width: 2000,
-        height: 2000,
+        width: parseInt(commander.width),
+        height: parseInt(commander.height),
         deviceScaleFactor: 2
     });
     await page.goto(`file://${index}`)
     const diagram = await page.$('svg')
     await diagram.screenshot({
-        path: 'diagram.png'
+        path: commander.output
     })
     await browser.close()
-})
-
-main()
+})()

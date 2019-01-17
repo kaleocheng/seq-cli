@@ -1,13 +1,30 @@
 {
-  "name": "node",
-  "version": "1.0.0",
-  "description": "node env",
-  "dependencies": {
-    "import-js": "^3.2.0",
-    "js-beautify": "^1.8.9",
-    "mustache": "^3.0.1",
-    "puppeteer": "^1.11.0",
-    "qrcode-terminal": "^0.12.0",
-    "save-svg-as-png": "^1.4.6"
-  }
+    "name": "seq",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "example": "example"
+    },
+    "bin": {
+        "seq-cli": "index.js"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kaleocheng/seq.git"
+    },
+    "author": "kaleo",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/kaleocheng/seq/issues"
+    },
+    "homepage": "https://github.com/kaleocheng/seq#readme",
+    "dependencies": {
+        "commander": "^2.19.0",
+        "mustache": "^3.0.1",
+        "puppeteer": "^1.11.0"
+    }
 }
