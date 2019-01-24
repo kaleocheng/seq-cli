@@ -10,12 +10,11 @@ npm install seq-cli
 
 ## Usage
 
-```
-A -> B: hello
-```
-
 ```bash
 seq-cli -i example/hello.seq
 ```
 
+```
+A -> B: hello
+```
 ![example](example/hello.svg)
