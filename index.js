@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const puppeteer = require('puppeteer')
 const Mustache = require('mustache')
 const commander = require('commander')
