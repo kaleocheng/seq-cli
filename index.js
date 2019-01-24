@@ -1,8 +1,8 @@
 const puppeteer = require('puppeteer')
 const Mustache = require('mustache')
-const commander = require('commander');
+const commander = require('commander')
 const path = require('path')
-const fs = require('fs');
+const fs = require('fs')
 const pkg = require('./package.json')
 
 
@@ -54,9 +54,13 @@ commander
         deviceScaleFactor: 2
     });
     await page.goto(`file://${index}`)
-    const diagram = await page.$('svg')
-    await diagram.screenshot({
-        path: commander.output
+    await page.$eval('svg', (element) => {
+        element.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+        element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
     })
+    const diagram = await page.$eval('#diagram', (element) => {
+        return element.innerHTML
+    })
+
     await browser.close()
 })()
