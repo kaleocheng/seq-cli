@@ -24,10 +24,10 @@ commander
             exit(`Input file ${cmd.input} doesn't exist`)
         }
     })
-    .option('-o, --output [output]', 'Output file. It should be png')
+    .option('-o, --output [output]', 'Output file. It should be svg')
     .action(cmd => {
         if (!cmd.output) {
-            cmd.output = path.join(path.parse(cmd.input).dir, `${path.parse(cmd.input).name}.png`)
+            cmd.output = path.join(path.parse(cmd.input).dir, `${path.parse(cmd.input).name}.svg`)
         }
         const outputDir = path.dirname(cmd.output)
         if (!fs.existsSync(outputDir)) {
@@ -62,5 +62,6 @@ commander
         return element.innerHTML
     })
 
+    fs.writeFileSync(commander.output, diagram)
     await browser.close()
 })()
