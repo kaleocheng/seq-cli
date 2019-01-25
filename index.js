@@ -17,7 +17,14 @@ commander
     .version(pkg.version)
     .option('-W, --width [width]', 'Width of the page. Optional.', /^\d+$/, '800')
     .option('-H, --height [height]', 'Height of the page. Optional.', /^\d+$/, '600')
-    .option('-e, --external [externalPath]', 'Use external chromium path')
+    .option('-p, --puppeteer-config [puppeteer-config]', 'Customer Config of Puppeteer')
+    .action(cmd => {
+        if (cmd.puppeteerConfig) {
+            if (!fs.existsSync(cmd.puppeteerConfig)) {
+                exit(`Puppeteer config file ${cmd.puppeteerConfig} doesn't exist`)
+            }
+        }
+    })
     .option('-i, --input <input>', 'Input seq file. Required.')
     .action(cmd => {
         if (!cmd.input) {
@@ -39,8 +46,6 @@ commander
     })
     .parse(process.argv);
 
-
-
 (async () => {
     const index = path.join(__dirname, 'index.html')
     const seq = fs.readFileSync(commander.input, 'utf8')
@@ -50,8 +55,8 @@ commander
     })
     fs.writeFileSync(index, output)
     const config = {}
-    if (commander.external) {
-        config.executablePath = commander.external
+    if (commander.puppeteerConfig) {
+        config = JSON.parse(fs.writeFileSync(commander.puppeteerConfig))
     }
     const browser = await puppeteer.launch(config)
     const page = await browser.newPage()
