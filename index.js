@@ -56,7 +56,7 @@ commander
     fs.writeFileSync(index, output)
     const config = {}
     if (commander.puppeteerConfig) {
-        config = JSON.parse(fs.writeFileSync(commander.puppeteerConfig))
+        config = JSON.parse(fs.readFileSync(commander.puppeteerConfig))
     }
     const browser = await puppeteer.launch(config)
     const page = await browser.newPage()
