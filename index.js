@@ -17,6 +17,7 @@ commander
     .version(pkg.version)
     .option('-W, --width [width]', 'Width of the page. Optional.', /^\d+$/, '800')
     .option('-H, --height [height]', 'Height of the page. Optional.', /^\d+$/, '600')
+    .option('-e, --external [externalPath]', 'Use external chromium path')
     .option('-i, --input <input>', 'Input seq file. Required.')
     .action(cmd => {
         if (!cmd.input) {
@@ -48,7 +49,11 @@ commander
         seq: seq
     })
     fs.writeFileSync(index, output)
-    const browser = await puppeteer.launch()
+    const config = {}
+    if (commander.external) {
+        config.executablePath = commander.external
+    }
+    const browser = await puppeteer.launch(config)
     const page = await browser.newPage()
     await page.setViewport({
         width: parseInt(commander.width),
