@@ -46,7 +46,7 @@ commander
     const seq = fs.readFileSync(commander.input, 'utf8')
     const template = fs.readFileSync(path.join(__dirname, 'index.mustache'), 'utf8')
     let output = Mustache.render(template, {
-        seq: seq
+        seq: seq.replace(/`/g, '\\`')
     })
     fs.writeFileSync(index, output)
     const config = {}
