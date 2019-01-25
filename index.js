@@ -54,7 +54,7 @@ commander
         seq: seq.replace(/`/g, '\\`')
     })
     fs.writeFileSync(index, output)
-    const config = {}
+    let config = {}
     if (commander.puppeteerConfig) {
         config = JSON.parse(fs.readFileSync(commander.puppeteerConfig))
     }
