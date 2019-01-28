@@ -65,7 +65,9 @@ commander
         height: parseInt(commander.height),
         deviceScaleFactor: 2
     });
-    await page.goto(`file://${index}`)
+    await page.goto(`file://${index}`, {
+        waitUntil: 'networkidle0'
+    })
     await page.$eval('svg', (element) => {
         element.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
         element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
