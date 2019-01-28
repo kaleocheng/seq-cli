@@ -15,6 +15,10 @@ seq-cli -i example/hello.seq
 ```
 
 ```
-A -> B: hello
+A -> B: Hey!
+Note Over A: this is a note
+C -> D: How are you
+D --> E: Good day
+E ->> F: HAHA
 ```
 ![example](example/hello.svg)
