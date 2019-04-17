@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-const puppeteer = require('puppeteer')
-const Mustache = require('mustache')
 const commander = require('commander')
 const path = require('path')
 const fs = require('fs')
 const pkg = require('./package.json')
+const render = require('./render')
 
 
 function exit(info) {
@@ -47,35 +46,6 @@ commander
     .parse(process.argv);
 
 (async () => {
-    const index = path.join(__dirname, 'index.html')
-    const seq = fs.readFileSync(commander.input, 'utf8')
-    const template = fs.readFileSync(path.join(__dirname, 'index.mustache'), 'utf8')
-    let output = Mustache.render(template, {
-        seq: seq.replace(/`/g, '\\`').replace(/\//g, '\\/')
-    })
-    fs.writeFileSync(index, output)
-    let config = {}
-    if (commander.puppeteerConfig) {
-        config = JSON.parse(fs.readFileSync(commander.puppeteerConfig))
-    }
-    const browser = await puppeteer.launch(config)
-    const page = await browser.newPage()
-    await page.setViewport({
-        width: parseInt(commander.width),
-        height: parseInt(commander.height),
-        deviceScaleFactor: 2
-    });
-    await page.goto(`file://${index}`, {
-        waitUntil: 'networkidle0'
-    })
-    await page.$eval('svg', (element) => {
-        element.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-        element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-    })
-    const diagram = await page.$eval('#diagram', (element) => {
-        return element.innerHTML
-    })
-
-    fs.writeFileSync(commander.output, diagram)
-    await browser.close()
+    let r = await render(fs.readFileSync(commander.input, 'utf8'), commander.width, commander.height, commander.puppeteerConfig)
+    fs.writeFileSync(commander.output, r)
 })()
