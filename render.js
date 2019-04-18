@@ -6,17 +6,30 @@ const path = require('path')
 const fs = require('fs')
 
 
-const render = async (seq, width, height, puppeteerConfig) => {
+const render = async (seq, option) => {
+    let width = 800
+    let height = 600
+    let config = {}
+
+    if (option) {
+        if (option.width) {
+            width = option.width
+        }
+
+        if (option.height) {
+            height = option.height
+        }
+        if (option.puppeteerConfig) {
+            config = option.puppeteerConfig
+        }
+
+    }
     const index = path.join(__dirname, 'index.html')
     const template = fs.readFileSync(path.join(__dirname, 'index.mustache'), 'utf8')
     let output = Mustache.render(template, {
         seq: seq.replace(/`/g, '\\`').replace(/\//g, '\\/')
     })
     fs.writeFileSync(index, output)
-    let config = {}
-    if (puppeteerConfig) {
-        config = puppeteerConfig
-    }
     const browser = await puppeteer.launch(config)
     const page = await browser.newPage()
     await page.setViewport({

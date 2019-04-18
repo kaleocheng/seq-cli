@@ -46,6 +46,6 @@ commander
     .parse(process.argv);
 
 (async () => {
-    let r = await render(fs.readFileSync(commander.input, 'utf8'), commander.width, commander.height, commander.puppeteerConfig)
+    let r = await render(fs.readFileSync(commander.input, 'utf8'), { width: commander.width, height: commander.height, puppeteerConfig: commander.puppeteerConfig })
     fs.writeFileSync(commander.output, r)
 })()
