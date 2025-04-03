@@ -23,8 +23,8 @@
     },
     "homepage": "https://github.com/kaleocheng/seq#readme",
     "dependencies": {
-        "commander": "^2.19.0",
-        "mustache": "^3.0.1",
-        "puppeteer": "^1.11.0"
+        "commander": "^13.1.0",
+        "mustache": "^4.2.0",
+        "puppeteer": "^24.5.0"
     }
 }
